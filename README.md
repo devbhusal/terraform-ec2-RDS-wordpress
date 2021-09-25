@@ -16,16 +16,16 @@ This terraform projects creates
   if you want to install wordpress in ubuntu , change ami -id and userdata file source
 
   --------------------------------------------------------------------------------
-  To plan 
+  To plan:   
   terraform plan -var-file="user.tfvars"
 
-  To apply
+  To apply:    
   terraform apply -var-file="user.tfvars"
 
-  To destroy
+  To destroy:    
   terraform destroy -var-file="user.tfvars"
 
   ------------------------------------------------------------------
 
-
+Resources will be created on default VPC
 
