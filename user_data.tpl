@@ -1,5 +1,5 @@
 #!/bin/bash
-# varaible will be populated by terraform template
+# variable will be populated by terraform template
 db_username=${db_username}
 db_user_password=${db_user_password}
 db_name=${db_name}
