@@ -27,5 +27,5 @@ This terraform projects creates
 
   ------------------------------------------------------------------
 
-Resources will be created on default VPC
+#Resources will be created on default VPC
 
