@@ -1,6 +1,6 @@
 This terraform projects creates
  RDS databse with mysql 5.7 
- EC2 instance with wordpress pre installed and configured 
+ #EC2 instance with wordpress pre installed and configured 
  ----------------------------------------------------------------------
  AWS FREE TRIAL friendly
  ----------------------------------------------------------------------
