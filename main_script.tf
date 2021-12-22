@@ -5,6 +5,73 @@ provider "aws" {
 }
 
 
+# Create VPC
+resource "aws_vpc" "prod-vpc" {
+    cidr_block = "10.0.0.0/16"
+    enable_dns_support = "true" #gives you an internal domain name
+    enable_dns_hostnames = "true" #gives you an internal host name
+    enable_classiclink = "false"
+    instance_tenancy = "default"    
+    
+    
+}
+
+# Create Public Subnet for EC2
+resource "aws_subnet" "prod-subnet-public-1" {
+    vpc_id = "${aws_vpc.prod-vpc.id}"
+    cidr_block = "10.0.1.0/24"
+    map_public_ip_on_launch = "true" //it makes this a public subnet
+    availability_zone = "${var.AZ1}"
+    
+}
+
+# Create Private subnet for RDS
+resource "aws_subnet" "prod-subnet-private-1" {
+    vpc_id = "${aws_vpc.prod-vpc.id}"
+    cidr_block = "10.0.2.0/24"
+    map_public_ip_on_launch = "false" //it makes private subnet
+    availability_zone = "${var.AZ2}"
+    
+}
+
+# Create second Private subnet for RDS
+resource "aws_subnet" "prod-subnet-private-2" {
+    vpc_id = "${aws_vpc.prod-vpc.id}"
+    cidr_block = "10.0.3.0/24"
+    map_public_ip_on_launch = "false" //it makes private subnet
+    availability_zone = "${var.AZ3}"
+    
+}
+
+
+
+# Create IGW for internet connection 
+resource "aws_internet_gateway" "prod-igw" {
+    vpc_id = "${aws_vpc.prod-vpc.id}"
+    
+}
+
+# Creating Route table 
+resource "aws_route_table" "prod-public-crt" {
+    vpc_id = "${aws_vpc.prod-vpc.id}"
+    
+    route {
+        //associated subnet can reach everywhere
+        cidr_block = "0.0.0.0/0" 
+        //CRT uses this IGW to reach internet
+        gateway_id = "${aws_internet_gateway.prod-igw.id}" 
+    }
+    
+    
+}
+
+
+# Associating route tabe to public subnet
+resource "aws_route_table_association" "prod-crta-public-subnet-1"{
+    subnet_id = "${aws_subnet.prod-subnet-public-1.id}"
+    route_table_id = "${aws_route_table.prod-public-crt.id}"
+}
+
 
 
 //security group for EC2
@@ -50,7 +117,7 @@ ingress {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  vpc_id = "${aws_vpc.prod-vpc.id}" 
   tags = {
     Name = "allow ssh,http,https"
   }
@@ -59,7 +126,7 @@ ingress {
 
 # Security group for RDS
 resource "aws_security_group" "RDS_allow_rule" {
-
+  vpc_id = "${aws_vpc.prod-vpc.id}" 
   ingress {
     from_port       = 3306
     to_port         = 3306
@@ -79,12 +146,18 @@ resource "aws_security_group" "RDS_allow_rule" {
 
 }
 
+# Create RDS Subnet group
+resource "aws_db_subnet_group" "RDS_subnet_grp" {
+   subnet_ids  = ["${aws_subnet.prod-subnet-private-1.id}","${aws_subnet.prod-subnet-private-2.id}"]
+}
+
 # Create RDS instance
 resource "aws_db_instance" "wordpressdb" {
   allocated_storage    = 10
   engine               = "mysql"
   engine_version       = "5.7"
-  instance_class       = "db.t3.micro"
+  instance_class       = "${var.instance_class}"
+  db_subnet_group_name      = "${aws_db_subnet_group.RDS_subnet_grp.id}"
   vpc_security_group_ids      =["${aws_security_group.RDS_allow_rule.id}"]
   name                 = "${var.database_name}"
   username             = "${var.database_user}"
@@ -108,15 +181,22 @@ data "template_file" "user_data" {
 resource "aws_instance" "wordpressec2" {
   ami="${var.ami}"
   instance_type="${var.instance_type}"
-  security_groups=["${aws_security_group.ec2_allow_rule.name}"]
+  subnet_id = "${aws_subnet.prod-subnet-public-1.id}"
+  security_groups=["${aws_security_group.ec2_allow_rule.id}"]
   user_data = "${data.template_file.user_data.rendered}"
-  key_name="${var.key_name}"
+  key_name="${aws_key_pair.mykey-pair.id}"
   tags = {
     Name = "Wordpress.web"
   }
 
   # this will stop creating EC2 before RDS is provisioned
   depends_on = [aws_db_instance.wordpressdb]
+}
+
+// Sends your public key to the instance
+resource "aws_key_pair" "mykey-pair" {
+    key_name = "mykey-pair"
+    public_key = "${file(var.PUBLIC_KEY_PATH)}"
 }
 
 # creating Elastic IP for EC2
@@ -131,6 +211,11 @@ output "IP" {
 output "RDS-Endpoint" {
     value = aws_db_instance.wordpressdb.endpoint
 }
+
+output "INFO" {
+  value= "Wait 2 to 3 mins . WordPress provisioning is in process"
+}
+
 
 
 

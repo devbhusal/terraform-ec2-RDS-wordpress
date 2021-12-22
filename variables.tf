@@ -5,6 +5,10 @@ variable "database_user" {}
 variable "region" {}
 variable "shared_credentials_file" {}
 variable "ami" {}
+variable "AZ1" {}
+variable "AZ2" {}
+variable "AZ3" {}
 variable "instance_type" {}
-variable "key_name" {}
+variable "instance_class" {}
+variable "PUBLIC_KEY_PATH" {}
 
