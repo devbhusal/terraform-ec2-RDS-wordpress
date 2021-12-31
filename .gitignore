@@ -4,3 +4,4 @@ mykey-pair.pub
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+user_data(exec).tpl

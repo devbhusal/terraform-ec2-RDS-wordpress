@@ -69,4 +69,5 @@ sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/Al
 # restart apache
 
 systemctl restart apache2
+echo WordPress Installed
 

@@ -213,7 +213,22 @@ output "RDS-Endpoint" {
 }
 
 output "INFO" {
-  value= "Wait 2 to 3 mins . WordPress provisioning is in process"
+  value= "AWS Resources and Wordpress has been provisioned. Go to http://${aws_eip.eip.public_ip}"
+}
+
+resource "null_resource" "Wordpress_Installation_Waiting"{
+ connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    private_key =  "${file(var.PRIV_KEY_PATH)}"
+    host     = aws_eip.eip.public_ip
+  }
+
+
+ provisioner "remote-exec" {
+    inline = ["sudo tail -f -n0 /var/log/cloud-init-output.log| grep -q 'WordPress Installed'"]
+      
+  }
 }
 
 

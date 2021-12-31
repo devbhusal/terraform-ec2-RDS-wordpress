@@ -71,4 +71,5 @@ sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/Al
 #Make apache and mysql to autostart and restart apache
 systemctl enable  httpd.service
 systemctl restart httpd.service
+echo WordPress Installed
 
