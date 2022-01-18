@@ -10,6 +10,8 @@ db_RDS=${db_RDS}
 # install LAMP Server
 apt update  -y
 apt upgrade -y
+apt update  -y
+apt upgrade -y
 #install apache server
 apt install -y apache2
  
@@ -21,8 +23,7 @@ apt install -y php php-{pear,cgi,common,curl,mbstring,gd,mysqlnd,bcmath,json,xml
 
 
 #and download mysql package to yum  and install mysql client from yum
-apt install -y  mysql-common
-
+apt install -y mysql-client-core-8.0
 
 # starting apache  and register them to startup
 
@@ -64,7 +65,8 @@ chown -R ubuntu:www-data /var/www/html
 chmod -R 774 /var/www/html
 rm /var/www/html/index.html
 #  enable .htaccess files in Apache config using sed command
-sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/apache2/apache2.conf
+sed -i '/<Directory "\/var\/www">/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/apache2/apache2.conf
+
 
 # restart apache
 
