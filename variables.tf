@@ -4,7 +4,11 @@ variable "database_user" {}
 
 variable "region" {}
 variable "shared_credentials_file" {}
-variable "ami" {}
+variable "IsUbuntu" {
+    type = bool 
+    default     = false
+    
+    }
 variable "AZ1" {}
 variable "AZ2" {}
 variable "AZ3" {}

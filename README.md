@@ -7,14 +7,14 @@ This terraform projects creates
  Change database entries ,regions and other variable in terraform.tfvars file
  And Database password in user.tfvars file
  -------------------------------------------------------------------------
-  This script is only suitable for AWS LINUX 2 so make sure you have correct region and 
-  ami id in that region.
+  This script is default for AWS LINUX 2 
+  If you want to configure wordpress in Ubuntu then change IsUbuntu value to true in terraform.tfvars
 
   Make sure you have configured aws CLI in your local machine
 
-  user_data.tf is script for LINUX 2 and userdata(ubuntu).tpl is for Ubuntu
-  if you want to install wordpress in ubuntu , change ami -id and userdata file source
-
+  user_data.tf is script for LINUX 2 and userdata_ubuntu.tpl is for Ubuntu
+  ----------------------------------------------------------------------------------------
+  ami-id will be imported using data.aws_ami 
   --------------------------------------------------------------------------------
  <h3> Security: </h3>
 <p> EC2 will be launched in public subnet and RDS will be launched in private subnet </p>
