@@ -65,8 +65,8 @@ chown -R ubuntu:www-data /var/www/html
 chmod -R 774 /var/www/html
 rm /var/www/html/index.html
 #  enable .htaccess files in Apache config using sed command
-sed -i '/<Directory "\/var\/www">/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/apache2/apache2.conf
-
+sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/apache2/apache2.conf
+a2enmod rewrite
 
 # restart apache
 
