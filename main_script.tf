@@ -179,12 +179,12 @@ data "template_file" "user_data" {
 
 # Create EC2 ( only after RDS is provisioned)
 resource "aws_instance" "wordpressec2" {
-  ami             = var.IsUbuntu ? data.aws_ami.ubuntu.id : data.aws_ami.linux2.id
-  instance_type   = var.instance_type
-  subnet_id       = aws_subnet.prod-subnet-public-1.id
-  security_groups = ["${aws_security_group.ec2_allow_rule.id}"]
-  user_data       = data.template_file.user_data.rendered
-  key_name        = aws_key_pair.mykey-pair.id
+  ami                    = var.IsUbuntu ? data.aws_ami.ubuntu.id : data.aws_ami.linux2.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.prod-subnet-public-1.id
+  vpc_security_group_ids = ["${aws_security_group.ec2_allow_rule.id}"]
+  user_data              = data.template_file.user_data.rendered
+  key_name               = aws_key_pair.mykey-pair.id
   tags = {
     Name = "Wordpress.web"
   }

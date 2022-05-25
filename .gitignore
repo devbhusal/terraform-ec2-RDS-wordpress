@@ -5,3 +5,5 @@ mykey-pair.pub
 terraform.tfstate
 terraform.tfstate.backup
 user_data(exec).tpl
+banner.txt
+wordpress_tf.sh

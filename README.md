@@ -7,8 +7,8 @@ This terraform projects creates
  Change database entries ,regions and other variable in terraform.tfvars file
  And Database password in user.tfvars file
  -------------------------------------------------------------------------
-  This script is default for AWS LINUX 2 
-  If you want to configure wordpress in Ubuntu then change IsUbuntu value to true in terraform.tfvars
+  This script is default for Ubuntu   
+  If you want to configure wordpress in AWS LINUX 2 then change IsUbuntu value to false in terraform.tfvars
 
   Make sure you have configured aws CLI in your local machine
 

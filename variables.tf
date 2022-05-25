@@ -6,7 +6,7 @@ variable "region" {}
 variable "shared_credentials_file" {}
 variable "IsUbuntu" {
   type    = bool
-  default = false
+  default = true
 
 }
 variable "AZ1" {}
