@@ -189,6 +189,11 @@ resource "aws_instance" "wordpressec2" {
     Name = "Wordpress.web"
   }
 
+  root_block_device {
+    volume_size = var.root_volume_size # in GB 
+
+  }
+
   # this will stop creating EC2 before RDS is provisioned
   depends_on = [aws_db_instance.wordpressdb]
 }

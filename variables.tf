@@ -20,4 +20,5 @@ variable "instance_type" {}
 variable "instance_class" {}
 variable "PUBLIC_KEY_PATH" {}
 variable "PRIV_KEY_PATH" {}
+variable "root_volume_size" {}
 
