@@ -1,7 +1,8 @@
 provider "aws" {
 
   region                  = var.region
-  shared_credentials_file = var.shared_credentials_file
+  shared_credentials_files =[var.shared_credentials_file]
+  profile                  = "default"
 }
 
 
@@ -10,7 +11,6 @@ resource "aws_vpc" "prod-vpc" {
   cidr_block           = var.VPC_cidr
   enable_dns_support   = "true" #gives you an internal domain name
   enable_dns_hostnames = "true" #gives you an internal host name
-  enable_classiclink   = "false"
   instance_tenancy     = "default"
 
 
@@ -159,7 +159,7 @@ resource "aws_db_instance" "wordpressdb" {
   instance_class         = var.instance_class
   db_subnet_group_name   = aws_db_subnet_group.RDS_subnet_grp.id
   vpc_security_group_ids = ["${aws_security_group.RDS_allow_rule.id}"]
-  name                   = var.database_name
+  db_name                   = var.database_name
   username               = var.database_user
   password               = var.database_password
   skip_final_snapshot    = true
@@ -222,6 +222,12 @@ output "INFO" {
 }
 
 resource "null_resource" "Wordpress_Installation_Waiting" {
+   # trigger will create new null-resource if ec2 id or rds is chnaged
+   triggers={
+    ec2_id=aws_instance.wordpressec2.id,
+    rds_endpoint=aws_db_instance.wordpressdb.endpoint
+
+  }
   connection {
     type        = "ssh"
     user        = var.IsUbuntu ? "ubuntu" : "ec2-user"

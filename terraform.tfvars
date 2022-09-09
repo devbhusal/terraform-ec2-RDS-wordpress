@@ -1,6 +1,6 @@
 database_name           = "wordpress_db"   // database name
 database_user           = "wordpress_user" //database username
-shared_credentials_file = "~/.aws"         //Access key and Secret key file location
+shared_credentials_file = "~/.aws/credentials"         //Access key and Secret key file location
 region                  = "ap-southeast-2" //sydney region
 IsUbuntu                = true             // true for ubuntu,false for linux 2  //boolean type
 
