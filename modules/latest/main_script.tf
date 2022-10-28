@@ -163,11 +163,16 @@ resource "aws_db_instance" "wordpressdb" {
   username               = var.database_user
   password               = var.database_password
   skip_final_snapshot    = true
+
+ # make sure rds manual password chnages is ignored
+  lifecycle {
+     ignore_changes = [password]
+   }
 }
 
 # change USERDATA varible value after grabbing RDS endpoint info
 data "template_file" "user_data" {
-  template = var.IsUbuntu ? file("./userdata_ubuntu.tpl") : file("./user_data.tpl")
+  template = var.IsUbuntu ? file("${path.module}/userdata_ubuntu.tpl") : file("${path.module}/user_data.tpl")
   vars = {
     db_username      = var.database_user
     db_user_password = var.database_password
